@@ -12,6 +12,22 @@ socket.on('disconnect', function() {
 
 socket.on('newMessage', function(message) {
     console.log('newMessage', message);
+
+    let newLi = document.createElement('LI');
+    let newContent = document.createTextNode(`${message.from}: ${message.text}`);
+    newLi.appendChild(newContent);
+    document.querySelector('#messages').append(newLi);
+});
+
+document.querySelector('#message-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    socket.emit('createMessage', {
+        from: 'User',
+        text: document.querySelector('[name=message]').value,
+    }, function() {
+
+    });
 });
 
 
