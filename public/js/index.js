@@ -11,22 +11,26 @@ socket.on('disconnect', () => {
 //Create new message in UI
 socket.on('newMessage', (message) => {
     let formattedTime = moment(message.createdAt).format('h:mm a');
+    let template = jQuery('#message-template').html();
+    let html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createdAt: formattedTime,
+    });
 
-    let newLi = document.createElement('LI');
-    let newContent = document.createTextNode(`${message.from} ${formattedTime}: ${message.text}`);
-    newLi.appendChild(newContent);
-    document.querySelector('#messages').append(newLi);
+    jQuery('#messages').append(html);
 });
 //Send geolocation to other user
 socket.on('newLocationMessage', (message) => {
     let formattedTime = moment(message.createdAt).format('h:mm a');
-    let newLi = jQuery('<li></li>');
-    let a = jQuery('<a target="_blank">My Location</a>');
+    let template = jQuery('#location-message-template').html();
+    let html = Mustache.render(template, {
+        from: message.from,
+        createdAt: formattedTime,
+        url: message.url,
+    });
 
-    newLi.text(`${message.from} ${formattedTime}: `);
-    a.attr('href', message.url);
-    newLi.append(a);
-    jQuery('#messages').append(newLi);
+    jQuery('#messages').append(html);
 });
 
 document.querySelector('#message-form').addEventListener('submit', (event) => {
