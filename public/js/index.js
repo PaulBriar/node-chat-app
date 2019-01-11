@@ -10,19 +10,20 @@ socket.on('disconnect', () => {
 
 //Create new message in UI
 socket.on('newMessage', (message) => {
-    console.log('newMessage', message);
+    let formattedTime = moment(message.createdAt).format('h:mm a');
 
     let newLi = document.createElement('LI');
-    let newContent = document.createTextNode(`${message.from}: ${message.text}`);
+    let newContent = document.createTextNode(`${message.from} ${formattedTime}: ${message.text}`);
     newLi.appendChild(newContent);
     document.querySelector('#messages').append(newLi);
 });
 //Send geolocation to other user
 socket.on('newLocationMessage', (message) => {
+    let formattedTime = moment(message.createdAt).format('h:mm a');
     let newLi = jQuery('<li></li>');
     let a = jQuery('<a target="_blank">My Location</a>');
 
-    newLi.text(`${message.from}: `);
+    newLi.text(`${message.from} ${formattedTime}: `);
     a.attr('href', message.url);
     newLi.append(a);
     jQuery('#messages').append(newLi);
