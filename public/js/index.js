@@ -1,5 +1,21 @@
 let socket = io();
 
+let scrollToBottom = () => {
+    //Selectors
+    let messages = jQuery('#messages');
+    let newMessage = messages.children('li:last-child')
+    //Heights
+    let clientHeight = messages.prop('clientHeight');
+    let scrollTop = messages.prop('scrollTop');
+    let scrollHeight = messages.prop('scrollHeight');
+    let newMsgHeight = newMessage.innerHeight();
+    let lastMsgHeight = newMessage.prev().innerHeight();
+
+    if (clientHeight + scrollTop + newMsgHeight + lastMsgHeight >= scrollHeight) {
+        messages.scrollTop(scrollHeight);
+    }
+};
+
 socket.on('connect', () => {
     console.log('Connected to server');
 });
@@ -19,6 +35,7 @@ socket.on('newMessage', (message) => {
     });
 
     jQuery('#messages').append(html);
+    scrollToBottom();
 });
 //Send geolocation to other user
 socket.on('newLocationMessage', (message) => {
@@ -31,6 +48,7 @@ socket.on('newLocationMessage', (message) => {
     });
 
     jQuery('#messages').append(html);
+    scrollToBottom();
 });
 
 document.querySelector('#message-form').addEventListener('submit', (event) => {
